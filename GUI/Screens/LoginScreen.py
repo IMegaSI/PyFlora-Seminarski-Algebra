@@ -50,8 +50,7 @@ class LoginScreen(Frame):
 
         self.tkImgShow = ImageTk.PhotoImage(imgShow)
         self.tkImgHide = ImageTk.PhotoImage(imgHide)
-        self.visbitlity_Button = ttk.Button(self.loginProzor, image=self.tkImgHide,
-                                            command=self.changeVisibility)
+        self.visbitlity_Button = ttk.Button(self.loginProzor, image=self.tkImgHide, command=self.changeVisibility)
         self.visbitlity_Button.grid(row=1, column=2, padx=5, pady=5)
 
         login_button = ttk.Button(self.loginProzor, text="Login", command=self.newlogin)

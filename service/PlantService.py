@@ -12,11 +12,6 @@ class PlantService:
         self.createTable()
         #self._insertPlants() # zavrtit jednom da se napravi baza biljki (odrađeno)
 
-
-
-
-
-
     def createTable(self):
         query = f"""
                 CREATE TABLE IF NOT EXISTS {self.TABLE_NAME}(

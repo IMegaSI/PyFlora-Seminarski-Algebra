@@ -9,7 +9,7 @@ class UserService:
     def __init__(self, sqlconnection):
         self.connection = sqlconnection
         self.createTable()
-        self._insertAdmin() #ovo triba samo jednom zavrtit (uspjesno napravljeno)
+        #self._insertAdmin() #ovo triba samo jednom zavrtit (uspjesno napravljeno)
 
 
     def createTable(self):
