@@ -11,4 +11,4 @@ if __name__ == '__main__':
     App = MainWindow(userService, plantService)
     App.mainloop()
 
-#sdfsdfsdfsdfsdfsdfsdf
+#test promjene
