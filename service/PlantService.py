@@ -70,7 +70,16 @@ class PlantService:
         else:
             return None
 
+    def getPlantByName(self, name):
+        query = f"SELECT * FROM {self.TABLE_NAME} WHERE name = '{name}'"
 
+        row = DBUtils.dohvatiPodatke(self.connection, query, True)
+
+        if row is not None:
+            newPlantDto = PlantDTO(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+            return newPlantDto
+        else:
+            return None
 
 
 

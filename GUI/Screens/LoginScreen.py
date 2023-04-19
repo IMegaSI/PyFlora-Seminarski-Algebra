@@ -80,7 +80,6 @@ class LoginScreen(Frame):
             self.tkModel.lastname.set(self.userdto.lastname)
             self.loginProzor.grid_remove()
             self.menuFrame()
-            # napravit neki frame u gornjem desnom kantunu sa ispisom userovin name i lastname?, napravljeno
 
         else:
             self.tkModel.warning.set("Username ili password ne odgovaraju!")

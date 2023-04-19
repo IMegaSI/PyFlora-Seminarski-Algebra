@@ -16,8 +16,6 @@ class PlantsAndPotsScreen(Frame):
         self.populatePotsTab()
 
 
-
-
     def makeTabs(self):
         self.plantsAndPotsFrame = ttk.LabelFrame(self, text="Plants and Pots")
         self.plantsAndPotsFrame.grid(row=0, column=0, pady=5, padx=5)
@@ -28,8 +26,8 @@ class PlantsAndPotsScreen(Frame):
         self.tabPlants = ttk.Frame(self.tabs)
         self.tabPots = ttk.Frame(self.tabs)
 
-        self.tabs.add(self.tabPlants, text="Plants")
-        self.tabs.add(self.tabPots, text="Pots")
+        self.tabs.add(self.tabPlants, text="--PLANTS--")
+        self.tabs.add(self.tabPots, text="-- POTS --")
 
     def populatePlantsTab(self):
         plants = self.plantService.getAllPlants()
@@ -97,8 +95,12 @@ class PlantsAndPotsScreen(Frame):
         close_button.pack(pady=10)
 
     def populatePotsTab(self):
-        self.plantsList = tk.Listbox(self.tabPots, width=20, selectmode=tk.SINGLE)
-        self.plantsList.grid(pady=5, padx=5, row=0, column=0)
+        lblInstructions = ttk.Label(self.tabPots, text="Dvoklikom na ime posadite biljku")
+        lblInstructions.pack()
+
+        self.plantsList = tk.Listbox(self.tabPots, width=20, height=12, selectmode=tk.SINGLE)
+        self.plantsList.pack(anchor=tk.NW,  expand=True)
+        self.plantsList.bind('<Double-Button-1>', self.PlantingThePlantInPot)
 
         self.plantsInList = self.plantService.getAllPlants()
         for plant in self.plantsInList:
@@ -106,14 +108,50 @@ class PlantsAndPotsScreen(Frame):
 
 
 
-        """napravit funkciju koja ce posadit biljku"""
-         # možda prebacit na kraj funkcije
-
     def PlantingThePlantInPot(self, event):
+        plantedPlantName = self.plantsList.get(self.plantsList.curselection())
+        self.plantedPlantDTO = self.plantService.getPlantByName(plantedPlantName)
+        print(self.plantedPlantDTO)
 
-        self.potFrame = ttk.Labelframe(self.tabPots, text=f"{self.plantsList.get(self.plantsList.curselection())}")
 
-        self.plantsList.bind('<<ListboxSelect>>', self.PlantingThePlantInPot)
+        self.potFrame = ttk.Labelframe(self.tabPots, text=plantedPlantName)
+        self.potFrame.pack(side=tk.LEFT, expand=True)
+
+        # Load the plant image using PIL and create a Tkinter PhotoImage object
+        plant_image = Image.open(self.plantedPlantDTO.photo)
+        plant_image = plant_image.resize((200, 200))
+        plant_photo = ImageTk.PhotoImage(plant_image)
+
+        # Create a label to display the plant image
+        self.imgPlanted = ttk.Label(self.potFrame, image=plant_photo)
+        self.imgPlanted.image = plant_photo
+        self.imgPlanted.pack(anchor=tk.NE, expand=True)
+
+        # labels for simulated info
+        self.lblSoilMoisture = ttk.Label(self.potFrame, text="Vlažnost zemlje:")
+        self.lblSoilMoisture.pack()
+        self.lvlSoilMoistureValue = ttk.Label(self.potFrame, text="33%")    # Ubacit simuliranu vrijednost kroz textvariable
+        self.lvlSoilMoistureValue.pack()
+
+        self.lblSoilPh = ttk.Label(self.potFrame, text="PH vrijednost zemlje:")
+        self.lblSoilPh.pack()
+        self.lblSoilPhValue = ttk.Label(self.potFrame, text="4.4")  # Ubacit simuliranu vrijednost kroz textvariable
+        self.lblSoilPhValue.pack()
+
+        self.lblLight = ttk.Label(self.potFrame, text="Količina svijetla")
+        self.lblLight.pack()
+        self.lblLightValue = ttk.Label(self.potFrame, text="Umjereno")  # Ubacit simuliranu vrijednost kroz textvariable
+        self.lblLightValue.pack()
+
+        self.lblAirTemp = ttk.Label(self.potFrame, text="Temperatura zraka")
+        self.lblAirTemp.pack()
+        self.lblAirTempValue = ttk.Label(self.potFrame, text="28")   # Ubacit simuliranu vrijednost kroz textvariable
+        self.lblAirTempValue.pack()
+
+
+
+
+
 
 
 

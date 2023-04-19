@@ -11,3 +11,6 @@ class PlantDTO:
         self.toplina = toplina
         self.dohrana = dohrana
 
+    def __repr__(self):
+        return f"{self.id}, {self.name}"
+

@@ -54,3 +54,4 @@ class UserService:
                 """
         DBUtils.izvrsiIZapisi(self.connection, query)
 
+
