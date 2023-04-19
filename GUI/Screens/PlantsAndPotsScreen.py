@@ -13,6 +13,7 @@ class PlantsAndPotsScreen(Frame):
         self.plantService: PlantService = plantService
         self.makeTabs()
         self.populatePlantsTab()
+        self.populatePotsTab()
 
 
 
@@ -94,6 +95,29 @@ class PlantsAndPotsScreen(Frame):
         # Create a button to close the window
         close_button = ttk.Button(plant_window, text="Close", command=plant_window.destroy)
         close_button.pack(pady=10)
+
+    def populatePotsTab(self):
+        self.plantsList = tk.Listbox(self.tabPots, width=20, selectmode=tk.SINGLE)
+        self.plantsList.grid(pady=5, padx=5, row=0, column=0)
+
+        self.plantsInList = self.plantService.getAllPlants()
+        for plant in self.plantsInList:
+            self.plantsList.insert("end", plant.name)
+
+
+
+        """napravit funkciju koja ce posadit biljku"""
+         # možda prebacit na kraj funkcije
+
+    def PlantingThePlantInPot(self, event):
+
+        self.potFrame = ttk.Labelframe(self.tabPots, text=f"{self.plantsList.get(self.plantsList.curselection())}")
+
+        self.plantsList.bind('<<ListboxSelect>>', self.PlantingThePlantInPot)
+
+
+
+
 
 
 
