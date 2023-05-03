@@ -179,10 +179,11 @@ class PlantsAndPotsScreen(Frame):
         self.editedPlantDTO = self.plantService.getPlantByName(editedPlantName)
         if self.editedPlantDTO is not None:
             self.tkModelPlant.name.set(self.editedPlantDTO.name)
-            self.tkModelPlant.description.set((self.editedPlantDTO.description))
+            self.tkModelPlant.description.set(self.editedPlantDTO.description)
             self.tkModelPlant.zalijevanje.set(self.editedPlantDTO.zalijevanje)
             self.tkModelPlant.osvjetljenje.set(self.editedPlantDTO.osvjetljenje)
             self.tkModelPlant.toplina.set(self.editedPlantDTO.toplina)
+            self.tkModelPlant.dohrana.set(self.editedPlantDTO.dohrana)
         print(self.editedPlantDTO)
 
         self.editingWindow = tk.Toplevel(self.master)
@@ -280,11 +281,13 @@ class PlantsAndPotsScreen(Frame):
             case 2:
                 self.plantService.createPlant(
                     self.tkModelPlant.name.get(),
-                    #self.tkModelPlant.description.get("1.0", tk.END),
+                    None,
+                    None,
                     self.tkModelPlant.zalijevanje.get(),
                     self.tkModelPlant.osvjetljenje.get(),
                     self.tkModelPlant.toplina.get(),
-                    self.tkModelPlant.toplina.get()
+                    self.tkModelPlant.dohrana.get()
+
                 )
             case 3:
                 dto = PlantDTO(id=self.editedPlantDTO.id,
