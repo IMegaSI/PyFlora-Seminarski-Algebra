@@ -1,10 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, Frame, Toplevel, messagebox
 from PIL import Image, ImageTk
-from utils.DBUtils import DBUtils
 from service.PlantService import PlantService
-import  os
 from datasource.tk.TkPlant import TkPlant
+from datasource.dto.PlantDTO import PlantDTO
 
 class PlantsAndPotsScreen(Frame):
 
@@ -163,7 +162,7 @@ class PlantsAndPotsScreen(Frame):
     """Edits tab"""
 
     def populateEditsTab(self):
-        lblInstructions = ttk.Label(self.tabEdits, text="Izmjena, brisanje i dodavanje novih biljaka")
+        lblInstructions = ttk.Label(self.tabEdits, text="Editing, creating and erasing plants")
         lblInstructions.pack()
 
         self.plantsListEditing = tk.Listbox(self.tabEdits, width=20, height=12, selectmode=tk.SINGLE)
@@ -186,22 +185,126 @@ class PlantsAndPotsScreen(Frame):
             self.tkModelPlant.toplina.set(self.editedPlantDTO.toplina)
         print(self.editedPlantDTO)
 
-        editingWindow = tk.Toplevel(self.master)
-        editingWindow.title(f"Editing Plant")
-        editingWindow.geometry("800x1000")
+        self.editingWindow = tk.Toplevel(self.master)
+        self.editingWindow.title(f"Editing Plants")
+        self.editingWindow.geometry("800x1000")
 
-        lblPlantName = ttk.Label(editingWindow, text="Ime biljke:")
+        self.lblFrameEditing = ttk.LabelFrame(self.editingWindow, text="Editing plants")
+        self.lblFrameEditing.grid(row=0, column=0)
+
+        lblPlantName = ttk.Label(self.lblFrameEditing, text="Ime biljke:")
         lblPlantName.grid(row=0, column=0)
 
-        entryPlantName = ttk.Entry(editingWindow, textvariable=self.tkModelPlant.name)
+        entryPlantName = ttk.Entry(self.lblFrameEditing, textvariable=self.tkModelPlant.name)
         entryPlantName.grid(row=0, column=1)
 
-        lblDescription = ttk.Label(editingWindow, text="Description:")
+        lblDescription = ttk.Label(self.lblFrameEditing, text="Description:")
         lblDescription.grid(row=0, column=2)
 
-        textPlantDescription = tk.Text(editingWindow, width=60)
+        textPlantDescription = tk.Text(self.lblFrameEditing, width=60)
         textPlantDescription.grid(row=1, column=2)
         textPlantDescription.insert("1.0", self.tkModelPlant.description.get())
+
+        lblPlantZalijevanje = ttk.Label(self.lblFrameEditing, text="Zalijevanje:")
+        lblPlantZalijevanje.grid(row=1, column=0, sticky=tk.N)
+
+        entryZalijevanje = ttk.Entry(self.lblFrameEditing, textvariable=self.tkModelPlant.zalijevanje)
+        entryZalijevanje.grid(row=1, column=1, sticky=tk.N)
+
+        lblPlantOsvjetljenje = ttk.Label(self.lblFrameEditing, text="Osvjetljenje:")
+        lblPlantOsvjetljenje.grid(row=2, column=0, sticky=tk.N)
+
+        entryOsvjetljenje = ttk.Entry(self.lblFrameEditing, textvariable=self.tkModelPlant.osvjetljenje)
+        entryOsvjetljenje.grid(row=2, column=1, sticky=tk.N)
+
+        lblPlantToplina = ttk.Label(self.lblFrameEditing, text="Toplina:")
+        lblPlantToplina.grid(row=3, column=0, sticky=tk.N)
+
+        entryToplina = ttk.Entry(self.lblFrameEditing, textvariable=self.tkModelPlant.toplina)
+        entryToplina.grid(row=3, column=1, sticky=tk.N)
+
+        self.btnSpremi = ttk.Button(self.lblFrameEditing, text="Save Changes", command=self.saveChangees)
+        self.btnSpremi.grid(row=2, column=2, sticky=tk.SE)
+
+        rbIzmjeni = ttk.Radiobutton(
+            self.lblFrameEditing,
+            variable=self.tkModelPlant.opcija,
+            text="Edit",
+            value=1,
+            command=self.provjeriAkciju
+        )
+        rbIzmjeni.grid(row=0, column=3, pady=10)
+
+        rbUnesi = ttk.Radiobutton(
+            self.lblFrameEditing,
+            variable=self.tkModelPlant.opcija,
+            text="Insert",
+            value=2,
+            command=self.provjeriAkciju
+        )
+        rbUnesi.grid(row=1, column=3, pady=10)
+
+        rbObrisi = ttk.Radiobutton(
+            self.lblFrameEditing,
+            variable=self.tkModelPlant.opcija,
+            text="Delete",
+            value=3,
+            command=self.provjeriAkciju
+        )
+        rbObrisi.grid(row=2, column=3, pady=10)
+        self.tkModelPlant.opcija.set(1)
+
+    def provjeriAkciju(self):
+        match(self.tkModelPlant.opcija.get()):
+            case 1:
+                self.lblFrameEditing.config(text="Edit Plant")
+                self.btnSpremi.config(text="Save Changes")
+            case 2:
+                self.lblFrameEditing.config(text="Insert Plant")
+                self.btnSpremi.config(text="Insert Plant")
+            case 3:
+                self.lblFrameEditing.config(text="Delete Plant")
+                self.btnSpremi.config(text="Delete Plant")
+    def saveChangees(self):
+        match (self.tkModelPlant.opcija.get()):
+            case 1:
+                dto = PlantDTO(id=self.editedPlantDTO.id,
+                                name=self.tkModelPlant.name.get(),
+                                photo=self.editedPlantDTO.photo,
+                                description=self.tkModelPlant.description.get(),
+                                zalijevanje=self.tkModelPlant.zalijevanje.get(),
+                                osvjetljenje=self.tkModelPlant.osvjetljenje.get(),
+                                toplina=self.tkModelPlant.toplina.get(),
+                                dohrana=self.editedPlantDTO.dohrana)
+                self.plantService.updatePlant(dto)
+            case 2:
+                self.plantService.createPlant(
+                    self.tkModelPlant.name.get(),
+                    #self.tkModelPlant.description.get("1.0", tk.END),
+                    self.tkModelPlant.zalijevanje.get(),
+                    self.tkModelPlant.osvjetljenje.get(),
+                    self.tkModelPlant.toplina.get(),
+                    self.tkModelPlant.toplina.get()
+                )
+            case 3:
+                dto = PlantDTO(id=self.editedPlantDTO.id,
+                                name=self.tkModelPlant.name.get(),
+                                photo=self.editedPlantDTO.photo,
+                                description=self.tkModelPlant.description.get(),
+                                zalijevanje=self.tkModelPlant.zalijevanje.get(),
+                                osvjetljenje=self.tkModelPlant.osvjetljenje.get(),
+                                toplina=self.tkModelPlant.toplina.get(),
+                                dohrana=self.editedPlantDTO.dohrana)
+                self.plantService.deleteplant(dto)
+
+
+
+
+
+
+
+
+
 
 
 

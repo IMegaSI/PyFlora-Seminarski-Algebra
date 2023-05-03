@@ -1,4 +1,4 @@
-from tkinter import StringVar, BooleanVar
+from tkinter import StringVar, BooleanVar, IntVar
 
 class TkPlant:
 
@@ -10,3 +10,4 @@ class TkPlant:
         self.osvjetljenje = StringVar()
         self.toplina = StringVar()
         self.dohrana = BooleanVar()
+        self.opcija = IntVar()

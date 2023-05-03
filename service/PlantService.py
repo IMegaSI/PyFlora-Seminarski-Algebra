@@ -34,7 +34,7 @@ class PlantService:
         DBUtils.izvrsiIZapisi(self.connection, query)
 
 
-    # Opisi su ručno ubačeni u bazu nakon inserta
+    # Opisi su ručno ubačeni u bazu nakon inserta da ne cluteram ovdje sa masu texta
     def _insertPlants(self):
         self.createPlant("Aloe vera", "plants/aloa.jpg", "plants/aloe_vera.txt", "Mjesecno", "Sjenovito", "Umjerena", False)
         self.createPlant("Bosiljak", "plants/basil.jpg", "plants/bosiljak.txt", "Tjedno", "Jarko", "Toplija", True)
@@ -81,6 +81,17 @@ class PlantService:
         else:
             return None
 
+    def updatePlant(self, dto: PlantDTO):
+        query = f"""
+                UPDATE {self.TABLE_NAME}
+                SET name='{dto.name}', zalijevanje='{dto.zalijevanje}', osvjetljenje='{dto.osvjetljenje}', toplina='{dto.toplina}'
+                WHERE id={dto.id};
+                """
+        DBUtils.izvrsiIZapisi(self.connection, query)
+
+    def deleteplant(self, dto: PlantDTO):
+        query = f"DELETE FROM {self.TABLE_NAME} WHERE id = '{dto.id}'"
+        DBUtils.izvrsiIZapisi(self.connection, query)
 
 
 
