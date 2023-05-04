@@ -202,9 +202,10 @@ class PlantsAndPotsScreen(Frame):
         lblDescription = ttk.Label(self.lblFrameEditing, text="Description:")
         lblDescription.grid(row=0, column=2)
 
-        textPlantDescription = tk.Text(self.lblFrameEditing, width=60)
-        textPlantDescription.grid(row=1, column=2)
-        textPlantDescription.insert("1.0", self.tkModelPlant.description.get())
+        self.textPlantDescription = tk.Text(self.lblFrameEditing, width=60)
+        self.textPlantDescription.grid(row=1, column=2)
+        self.textPlantDescription.config(state=tk.NORMAL)
+        self.textPlantDescription.insert("1.0", self.tkModelPlant.description.get())
 
         lblPlantZalijevanje = ttk.Label(self.lblFrameEditing, text="Zalijevanje:")
         lblPlantZalijevanje.grid(row=1, column=0, sticky=tk.N)
@@ -272,7 +273,7 @@ class PlantsAndPotsScreen(Frame):
                 dto = PlantDTO(id=self.editedPlantDTO.id,
                                 name=self.tkModelPlant.name.get(),
                                 photo=self.editedPlantDTO.photo,
-                                description=self.tkModelPlant.description.get(),
+                                description=self.textPlantDescription.get("1.0", tk.END),
                                 zalijevanje=self.tkModelPlant.zalijevanje.get(),
                                 osvjetljenje=self.tkModelPlant.osvjetljenje.get(),
                                 toplina=self.tkModelPlant.toplina.get(),
@@ -282,7 +283,7 @@ class PlantsAndPotsScreen(Frame):
                 self.plantService.createPlant(
                     self.tkModelPlant.name.get(),
                     None,
-                    None,
+                    self.textPlantDescription.get("1.0", tk.END),
                     self.tkModelPlant.zalijevanje.get(),
                     self.tkModelPlant.osvjetljenje.get(),
                     self.tkModelPlant.toplina.get(),
@@ -293,7 +294,7 @@ class PlantsAndPotsScreen(Frame):
                 dto = PlantDTO(id=self.editedPlantDTO.id,
                                 name=self.tkModelPlant.name.get(),
                                 photo=self.editedPlantDTO.photo,
-                                description=self.tkModelPlant.description.get(),
+                                description=self.textPlantDescription.get("1.0", tk.END),
                                 zalijevanje=self.tkModelPlant.zalijevanje.get(),
                                 osvjetljenje=self.tkModelPlant.osvjetljenje.get(),
                                 toplina=self.tkModelPlant.toplina.get(),

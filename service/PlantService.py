@@ -84,7 +84,7 @@ class PlantService:
     def updatePlant(self, dto: PlantDTO):
         query = f"""
                 UPDATE {self.TABLE_NAME}
-                SET name='{dto.name}', zalijevanje='{dto.zalijevanje}', osvjetljenje='{dto.osvjetljenje}', toplina='{dto.toplina}'
+                SET name='{dto.name}',description='{dto.description}', zalijevanje='{dto.zalijevanje}', osvjetljenje='{dto.osvjetljenje}', toplina='{dto.toplina}'
                 WHERE id={dto.id};
                 """
         DBUtils.izvrsiIZapisi(self.connection, query)
