@@ -4,6 +4,8 @@ from PIL import Image, ImageTk
 from service.PlantService import PlantService
 from datasource.tk.TkPlant import TkPlant
 from datasource.dto.PlantDTO import PlantDTO
+import random
+from datasource.tk.TkValues import TkValues
 
 class PlantsAndPotsScreen(Frame):
 
@@ -13,6 +15,7 @@ class PlantsAndPotsScreen(Frame):
         self.tkModelPlant = TkPlant()
         self.plantService: PlantService = plantService
         self.makeTabs()
+        self.simNumbers = TkValues()
         self.populatePlantsTab()
         self.populatePotsTab()
         self.populateEditsTab()
@@ -110,12 +113,15 @@ class PlantsAndPotsScreen(Frame):
         lblInstructions.pack()
 
         self.plantsList = tk.Listbox(self.tabPots, width=20, height=12, selectmode=tk.SINGLE)
-        self.plantsList.pack(anchor=tk.NW,  expand=True)
+        self.plantsList.pack(anchor=tk.NW,  expand=True, side=tk.LEFT)
         self.plantsList.bind('<Double-Button-1>', self.plantingThePlantInPot)
 
         self.plantsInList = self.plantService.getAllPlants()
         for plant in self.plantsInList:
             self.plantsList.insert("end", plant.name)
+
+        self.btnGetnumbers = ttk.Button(self.tabPots, text="Get info", command=self.simulateNumbers)
+        self.btnGetnumbers.pack(side=tk.RIGHT)
 
 
 
@@ -126,7 +132,7 @@ class PlantsAndPotsScreen(Frame):
 
 
         self.potFrame = ttk.Labelframe(self.tabPots, text=plantedPlantName)
-        self.potFrame.pack(side=tk.LEFT, expand=True)
+        self.potFrame.pack(side=tk.LEFT, expand=True, anchor=tk.S)
 
         # Load the plant image using PIL and create a Tkinter PhotoImage object
         plant_image = Image.open(self.plantedPlantDTO.photo)
@@ -141,22 +147,22 @@ class PlantsAndPotsScreen(Frame):
         # labels for simulated info
         self.lblSoilMoisture = ttk.Label(self.potFrame, text="Vlažnost zemlje:")
         self.lblSoilMoisture.pack()
-        self.lvlSoilMoistureValue = ttk.Label(self.potFrame, text="33%")    # Ubacit simuliranu vrijednost kroz textvariable
+        self.lvlSoilMoistureValue = ttk.Label(self.potFrame, textvariable=self.simNumbers.soilMoisture)
         self.lvlSoilMoistureValue.pack()
 
         self.lblSoilPh = ttk.Label(self.potFrame, text="PH vrijednost zemlje:")
         self.lblSoilPh.pack()
-        self.lblSoilPhValue = ttk.Label(self.potFrame, text="4.4")  # Ubacit simuliranu vrijednost kroz textvariable
+        self.lblSoilPhValue = ttk.Label(self.potFrame, textvariable=self.simNumbers.soilPh)
         self.lblSoilPhValue.pack()
 
         self.lblLight = ttk.Label(self.potFrame, text="Količina svijetla")
         self.lblLight.pack()
-        self.lblLightValue = ttk.Label(self.potFrame, text="Umjereno")  # Ubacit simuliranu vrijednost kroz textvariable
+        self.lblLightValue = ttk.Label(self.potFrame, textvariable=self.simNumbers.light)
         self.lblLightValue.pack()
 
         self.lblAirTemp = ttk.Label(self.potFrame, text="Temperatura zraka")
         self.lblAirTemp.pack()
-        self.lblAirTempValue = ttk.Label(self.potFrame, text="28")   # Ubacit simuliranu vrijednost kroz textvariable
+        self.lblAirTempValue = ttk.Label(self.potFrame, textvariable=self.simNumbers.airTemp)
         self.lblAirTempValue.pack()
 
     """Edits tab"""
@@ -301,6 +307,13 @@ class PlantsAndPotsScreen(Frame):
                                 dohrana=self.editedPlantDTO.dohrana)
                 self.plantService.deleteplant(dto)
 
+
+    def simulateNumbers(self):
+        mylist = ["Sjenovito", "Jarko"]
+        self.simNumbers.soilPh.set(random.randrange(5, 8))
+        self.simNumbers.soilMoisture.set(random.randrange(20, 100))
+        self.simNumbers.airTemp.set(random.randrange(10, 30))
+        self.simNumbers.light.set(random.choice(mylist))
 
 
 
