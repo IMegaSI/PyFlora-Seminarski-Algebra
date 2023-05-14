@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 from service.PlantService import PlantService
 from datasource.tk.TkPlant import TkPlant
 from datasource.dto.PlantDTO import PlantDTO
-import random
+
 from datasource.tk.TkValues import TkValues
 
 class PlantsAndPotsScreen(Frame):
@@ -15,7 +15,7 @@ class PlantsAndPotsScreen(Frame):
         self.tkModelPlant = TkPlant()
         self.plantService: PlantService = plantService
         self.makeTabs()
-        self.simNumbers = TkValues()
+
         self.populatePlantsTab()
         self.populatePotsTab()
         self.populateEditsTab()
@@ -120,12 +120,13 @@ class PlantsAndPotsScreen(Frame):
         for plant in self.plantsInList:
             self.plantsList.insert("end", plant.name)
 
-        self.btnGetnumbers = ttk.Button(self.tabPots, text="Get info", command=self.simulateNumbers)
-        self.btnGetnumbers.pack(side=tk.RIGHT)
+
+
 
 
 
     def plantingThePlantInPot(self, event):
+        self.simNumbers = TkValues()
         plantedPlantName = self.plantsList.get(self.plantsList.curselection())
         self.plantedPlantDTO = self.plantService.getPlantByName(plantedPlantName)
         print(self.plantedPlantDTO)
@@ -164,6 +165,9 @@ class PlantsAndPotsScreen(Frame):
         self.lblAirTemp.pack()
         self.lblAirTempValue = ttk.Label(self.potFrame, textvariable=self.simNumbers.airTemp)
         self.lblAirTempValue.pack()
+
+        self.btnGetnumbers = ttk.Button(self.potFrame, text="Get info", command=self.simNumbers.simulateNumbers)
+        self.btnGetnumbers.pack(side=tk.RIGHT)
 
     """Edits tab"""
 
@@ -308,12 +312,7 @@ class PlantsAndPotsScreen(Frame):
                 self.plantService.deleteplant(dto)
 
 
-    def simulateNumbers(self):
-        mylist = ["Sjenovito", "Jarko"]
-        self.simNumbers.soilPh.set(random.randrange(5, 8))
-        self.simNumbers.soilMoisture.set(random.randrange(20, 100))
-        self.simNumbers.airTemp.set(random.randrange(10, 30))
-        self.simNumbers.light.set(random.choice(mylist))
+
 
 
 
